@@ -5,7 +5,7 @@ void testApp::setup(){
     ofSetWindowTitle("CLOUD Beta");
     //ofHideCursor();
     ofBackground(255,255,255);
-    ofSetFrameRate(FRAME_RATE);
+    ofSetFrameRate(FRAMERATE);
     for(int i=0; i<sizeof(particles)/sizeof(particles[0]); i++)    {
         particles[i].getGraphic().fill();
     }
@@ -16,18 +16,15 @@ void testApp::update(){
     for(int i=0; i<sizeof(particles)/sizeof(particles[0]); i++)    {
         particles[i].update();
     }
-//    for(int i=0;i<5;i++) //for debugging{
-//        particles[i].printInfo();
-//    }
+
+    particles[0].printInfo(); // for debugging
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofEnableSmoothing();
     for(int i=0; i<sizeof(particles)/sizeof(particles[0]); i++)    {
         particles[i].draw();
     }
-    ofDisableSmoothing();
 }
 
 //--------------------------------------------------------------

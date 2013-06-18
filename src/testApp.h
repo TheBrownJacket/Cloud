@@ -3,8 +3,8 @@
 #include "ofMain.h"
 #include "Particle.h"
 
-#define NUM_OF_PARTICLES 200
-#define FRAME_RATE 60
+#define NUM_OF_PARTICLES 300
+#define FRAMERATE 60
 
 class testApp : public ofBaseApp{
     public:

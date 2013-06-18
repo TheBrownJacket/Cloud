@@ -4,15 +4,14 @@
 #include "ofMain.h"
 #include "ofxVectorGraphics.h"
 
-#define MIN_SPEED 1
 #define MAX_SPEED 5
 #define MIN_RADIUS 1
-#define MAX_RADIUS 10
+#define MAX_RADIUS 5
 
 class Particle{
     public:
-        Particle(int x=ofRandom(ofGetWindowWidth()), int y=ofRandom(ofGetWindowHeight()),float dxdt=ofRandom(MIN_SPEED,MAX_SPEED),
-                 float dydt=ofRandom(MIN_SPEED,MAX_SPEED), float r=ofRandom(MIN_RADIUS,MAX_RADIUS));
+        Particle(int x=ofRandom(ofGetWindowWidth()), int y=ofRandom(ofGetWindowHeight()),float dxdt=ofRandomf()*MAX_SPEED,
+                 float dydt=ofRandomf()*MAX_SPEED, float r=ofRandom(MIN_RADIUS,MAX_RADIUS));
         //getters
         int getX();
         int getY();
@@ -48,7 +47,7 @@ class Particle{
         ofVec2f accel;
 
         float radius;
-        int alpha;
+        int alpha; // not used yet
         ofColor color;
         ofxVectorGraphics graphic;
 
