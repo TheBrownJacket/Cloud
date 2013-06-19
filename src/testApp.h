@@ -3,11 +3,13 @@
 #include "ofMain.h"
 #include "Particle.h"
 
-#define NUM_OF_PARTICLES 300
+#define NUM_OF_PARTICLES 100
 #define FRAMERATE 60
 
 class testApp : public ofBaseApp{
     public:
+        bool debug;
+
         void setup();
         void update();
         void draw();

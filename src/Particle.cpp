@@ -1,35 +1,50 @@
 #include "Particle.h"
 
-//Reference objects
+// Reference objects
 const ofVec2f Particle::origin = ofVec2f(0,0);
 const ofVec2f Particle::xAxis = ofVec2f(1,0);
 const ofVec2f Particle::yAxis = ofVec2f(0,1);
 
-Particle::Particle(int x, int y, float dxdt, float dydt, float r) :
-    point(ofPoint(ofClamp(x,r,ofGetWindowWidth()-r),ofClamp(y,r,ofGetWindowHeight()-r))),
-    dir(ofVec2f(dxdt,dydt)), radius(r), color(ofColor(ofRandom(255),ofRandom(255),ofRandom(255)))
+Particle::Particle() : // Using initializer list
+    angle(ofRandomf()*PI), // Set to random angle from -PI to PI
+    speed(ofRandom(MIN_SPEED,MAX_SPEED)), // Set to random speed within bounds
+    flow(0), // For now, set to zero
+    alpha(0), // For now, set to zero
+
+    position(ofVec2f(ofRandom(0,ofGetWindowWidth()),ofRandom(0,ofGetWindowHeight()))), // Set to random position
+    velocity(ofVec2f(cos(angle)*speed,sin(angle)*speed)), // Set to correct velocity
+    acceleration(ofVec2f(0,0)), // For now, set to zero acceleration
+
+    radius(ofRandom(MIN_RADIUS,MAX_RADIUS)), // Set to varible radius
+    opaque(255) // For now, set to full visibilty
 {
 
 }
 
-//Getters
-int Particle::getX(){
-    return point.x;
+// Getters
+float Particle::getX(){
+    return position.x;
 }
-int Particle::getY(){
-    return point.y;
+float Particle::getY(){
+    return position.y;
 }
 float Particle::getSpeed(){
-    return dir.distance(origin);
+    return speed;
 }
 float Particle::getAngle(){
-    return dir.angleRad(xAxis);
+    while (angle>PI){
+        angle -= 2*PI;
+    }
+    while (angle<-PI){
+        angle += 2*PI;
+    }
+    return angle;
 }
 float Particle::getRadius(){
     return radius;
 }
-int Particle::getAlpha(){
-    return alpha;
+float Particle::getOpaque(){
+    return opaque;
 }
 ofColor & Particle::getColor(){
     return color;
@@ -38,55 +53,49 @@ ofxVectorGraphics & Particle::getGraphic(){
     return graphic;
 }
 
-//Setters
-void Particle::setX(int x){
-    point.x = x;
+// Setters
+void Particle::setX(float x){
+    position.x = x;
 }
-void Particle::setY(int y){
-    point.y = y;
+void Particle::setY(float y){
+    position.y = y;
 }
-void Particle::setSpeed(float s){ // in progress
-    s = ofClamp(s,0,MAX_SPEED);
+void Particle::setSpeed(float s){
+    speed = ofClamp(s,0,MAX_SPEED);
+    velocity.x = cos(angle)*speed;
+    velocity.y = sin(angle)*speed;
 }
 void Particle::setAngle(float a){
-
+    angle = a;
+    setSpeed(getSpeed());
 }
-void Particle::setRadius(float r){ // in progress
+void Particle::setRadius(float r){
     radius = ofClamp(r,MIN_RADIUS,MAX_RADIUS);
 }
-void Particle::setAlpha(int a){
-    alpha = ofClamp(a,0,255);
+void Particle::setOpaque(float o){
+    opaque = ofClamp(o,0,255);
 }
-void Particle::setColor(int r, int g, int b){
+void Particle::setColor(int r, int g, int b){ // Currently irrelevant
     getColor().r = ofClamp(r,0,255);
     getColor().g = ofClamp(g,0,255);
     getColor().b = ofClamp(b,0,255);
 }
 
-//Other methods
+// Other methods
 void Particle::update(){
-    //position + motion
-    if (getX()>=ofGetWindowWidth() || getX()<=0)
-    {
-        dir.x = -dir.x;
+    // position + motion
+    if (getX()>=ofGetWindowWidth() || getX()<=0){
+        setAngle(-getAngle()+PI);
     }
-    if (getY()>=ofGetWindowHeight() || getY()<=0)
-    {
-        dir.y = -dir.y;
+    if (getY()>=ofGetWindowHeight() || getY()<=0){
+        setAngle(-getAngle());
     }
-//    if (getX()>=ofGetWindowWidth()-getRadius() || getX()<=getRadius())
-//    {
-//        dir.x = -dir.x;
-//    }
-//    if (getY()>=ofGetWindowHeight()-getRadius() || getY()<=getRadius())
-//    {
-//        dir.y = -dir.y;
-//    }
-    point += dir;
-    //color
-    int r = ((float)getY()/ofGetWindowHeight()+((float)getY()/ofGetWindowHeight()))/2*255;
-    int g = (float)ofGetMouseX()/ofGetWindowWidth()*255;
-    int b = (float)ofGetMouseY()/ofGetWindowHeight()*255;
+    velocity += acceleration;
+    position += velocity;
+    // color
+    float r = (getY()/ofGetWindowHeight()+getY()/ofGetWindowHeight())/2*255;
+    float g = (float)ofGetMouseX()/ofGetWindowWidth()*255;
+    float b = (float)ofGetMouseY()/ofGetWindowHeight()*255;
     setColor(r,g,b);
 }
 void Particle::reset(){
@@ -97,8 +106,11 @@ void Particle::draw(){
     graphic.circle(getX(),getY(),getRadius());
 }
 void Particle::printInfo(){
-    if (ofGetFrameNum()%(int)ofGetFrameRate() == 0)
-    cout << '(' + ofToString(getX()) + ',' + ofToString(getY()) + ')' << endl << endl;
+    if (ofGetFrameNum()%(int)ofGetFrameRate() == 0){
+        cout << '(' + ofToString(getX()) + ',' + ofToString(getY()) + ')' << endl;
+        cout << getSpeed() << endl;
+        cout << endl;
+    }
 }
 
 
