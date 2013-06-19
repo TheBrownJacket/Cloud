@@ -4,7 +4,7 @@
 void testApp::setup(){
     debug = true;
 
-    ofSetWindowTitle("CLOUD Beta");
+    ofSetWindowTitle("CLOUD BETA");
     //ofHideCursor();
     ofBackground(255,255,255);
     ofSetFrameRate(FRAMERATE);
@@ -19,8 +19,7 @@ void testApp::update(){
         particles[i].update();
     }
     if (debug){
-
-        particles[3].printInfo();
+        particles[0].printInfo();
     }
 }
 
@@ -30,48 +29,51 @@ void testApp::draw(){
         particles[i].draw();
     }
     ofSetColor(0,0,0);
-    string keys = "Use number keys to set upper bound of the max speed for each particle. Key 0 sets upper to 10.\n";
-    string colors = "Position of mouse has influence on the color gradient of particles.";
-    ofDrawBitmapString(keys + colors,0,10);
+    string title = "CLOUD BETA\n";
+    string keys = "Use number keys to set upper bound of the max speed for each particle.\nKey 0 sets upper to maximum allowed speed.\n";
+    string colors = "Position and speed of particles has influence on the color gradient.";
+    ofDrawBitmapString(title + keys + colors,5,15);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    float speed;
+    float speed = NULL;
     switch (key){
         case '1':
-            speed = 1;
+            speed = (1.0/10)*MAX_SPEED;
             break;
         case '2':
-            speed = 2;
+            speed = (2.0/10)*MAX_SPEED;
             break;
         case '3':
-            speed = 3;
+            speed = (3.0/10)*MAX_SPEED;
             break;
         case '4':
-            speed = 4;
+            speed = (4.0/10)*MAX_SPEED;
             break;
         case '5':
-            speed = 5;
+            speed = (5.0/10)*MAX_SPEED;
             break;
         case '6':
-            speed = 6;
+            speed = (6.0/10)*MAX_SPEED;
             break;
         case '7':
-            speed = 7;
+            speed = (7.0/10)*MAX_SPEED;
             break;
         case '8':
-            speed = 8;
+            speed = (8.0/10)*MAX_SPEED;
             break;
         case '9':
-            speed = 9;
+            speed = (9.0/10)*MAX_SPEED;
             break;
         case '0':
-            speed = 10;
+            speed = MAX_SPEED;
             break;
     }
-    for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
-        particles[i].setSpeed(ofRandom(MIN_SPEED,speed));
+    if (speed != NULL){
+        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+            particles[i].setSpeed(ofRandom(MIN_SPEED,speed));
+        }
     }
 }
 
@@ -92,12 +94,21 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
+    cout << button << endl;
+    if (button == 0){
+        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+            particles[i].setAttract(true);
+        }
+    }
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
+    if (button == 0){
+        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+            particles[i].setAttract(false);
+        }
+    }
 }
 
 //--------------------------------------------------------------

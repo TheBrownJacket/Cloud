@@ -5,6 +5,6 @@
 //========================================================================
 int main(){
     ofAppGlutWindow window;
-    ofSetupOpenGL(&window, 853,480, OF_WINDOW); // Can be OF_WINDOW, OF_FULLSCREEN, or OF_GAME_MODE
-    ofRunApp( new testApp());
+    ofSetupOpenGL(&window,853,480,OF_WINDOW); // Can be OF_WINDOW, OF_FULLSCREEN, or OF_GAME_MODE
+    ofRunApp(new testApp());
 }

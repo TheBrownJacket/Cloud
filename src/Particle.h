@@ -5,10 +5,13 @@
 #include "ofxVectorGraphics.h"
 #include <cmath>
 
-#define MIN_SPEED 1.0
+#define MIN_SPEED 0.0
 #define MAX_SPEED 10.0
 
-#define MAX_ACCEL 2.0
+#define MIN_FLOW 0.0
+#define MAX_FLOW 2.0
+
+#define MAX_ALPHA PI/2
 
 #define MIN_RADIUS 1.0
 #define MAX_RADIUS 5.0
@@ -25,6 +28,7 @@ class Particle{
         float getOpaque();
         ofColor & getColor();
         ofxVectorGraphics & getGraphic();
+        bool getAttract();
 
         // Setters
         void setX(float x);
@@ -34,6 +38,7 @@ class Particle{
         void setRadius(float r);
         void setOpaque(float o);
         void setColor(int r, int g,  int b);
+        void setAttract(bool a);
 
         // Other methods
         void update();
@@ -59,6 +64,8 @@ class Particle{
         float opaque; // not used yet
         ofColor color;
         ofxVectorGraphics graphic;
+
+        bool attract;
 
     private:
 };
