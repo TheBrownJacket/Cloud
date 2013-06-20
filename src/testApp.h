@@ -14,7 +14,7 @@ class testApp : public ofBaseApp{
         void update();
         void draw();
 
-        Particle particles[NUM_OF_PARTICLES];
+        vector <Particle> particles;
 
         void keyPressed  (int key);
         void keyReleased(int key);

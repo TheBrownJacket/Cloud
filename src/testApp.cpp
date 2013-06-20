@@ -8,14 +8,16 @@ void testApp::setup(){
     //ofHideCursor();
     ofBackground(255,255,255);
     ofSetFrameRate(FRAMERATE);
-    for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+
+    particles.assign(NUM_OF_PARTICLES,Particle());
+    for (int i=0; i<particles.size(); i++){
         particles[i].getGraphic().fill();
     }
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-    for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+    for (int i=0; i<particles.size(); i++){
         particles[i].update();
     }
     if (debug){
@@ -25,7 +27,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+    for (int i=0; i<particles.size(); i++){
         particles[i].draw();
     }
     ofSetColor(0,0,0);
@@ -71,7 +73,7 @@ void testApp::keyPressed(int key){
             break;
     }
     if (speed != NULL){
-        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+        for (int i=0; i<particles.size(); i++){
             particles[i].setSpeed(ofRandom(MIN_SPEED,speed));
         }
     }
@@ -94,10 +96,15 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    cout << button << endl;
+    //cout << button << endl;
     if (button == 0){
-        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+        for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(true);
+        }
+    }
+    else if (button == 2){
+        for (int i=0; i<particles.size(); i++){
+            particles[i].setRepel(true);
         }
     }
 }
@@ -105,15 +112,20 @@ void testApp::mousePressed(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
     if (button == 0){
-        for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+        for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(false);
+        }
+    }
+    else if (button == 2){
+        for (int i=0; i<particles.size(); i++){
+            particles[i].setRepel(false);
         }
     }
 }
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-    for (int i=0; i<sizeof(particles)/sizeof(particles[0]); i++){
+    for (int i=0; i<particles.size(); i++){
         particles[i].reset();
     }
 }

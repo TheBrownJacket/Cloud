@@ -29,6 +29,7 @@ class Particle{
         ofColor & getColor();
         ofxVectorGraphics & getGraphic();
         bool getAttract();
+        bool getRepel();
 
         // Setters
         void setX(float x);
@@ -39,6 +40,7 @@ class Particle{
         void setOpaque(float o);
         void setColor(int r, int g,  int b);
         void setAttract(bool a);
+        void setRepel(bool r);
 
         // Other methods
         void update();
@@ -66,6 +68,7 @@ class Particle{
         ofxVectorGraphics graphic;
 
         bool attract;
+        bool repel;
 
     private:
 };

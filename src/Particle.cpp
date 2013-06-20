@@ -18,7 +18,8 @@ Particle::Particle() : // Using initializer list
     radius(ofRandom(MIN_RADIUS,MAX_RADIUS)), // Set to varible radius
     opaque(255), // For now, set to full visibilty
 
-    attract(false)
+    attract(false), // Set to no attraction
+    repel(false) // Set to no repulsion
 {
 
 }
@@ -50,6 +51,9 @@ ofxVectorGraphics & Particle::getGraphic(){
 }
 bool Particle::getAttract(){
     return attract;
+}
+bool Particle::getRepel(){
+    return repel;
 }
 
 // Setters
@@ -88,6 +92,9 @@ void Particle::setColor(int r, int g, int b){
 void Particle::setAttract(bool a){
     attract = a;
 }
+void Particle::setRepel(bool r){
+    repel = r;
+}
 
 // Other methods
 void Particle::update(){
@@ -100,6 +107,16 @@ void Particle::update(){
         }
         else {
             setAngle(atan(dy/dx)+PI);
+        }
+    }
+    else if (repel){
+        float dy = ((float)ofGetWindowHeight()-ofGetMouseY())-getY();
+        float dx = ofGetMouseX()-getX();
+        if (dx>=0){
+            setAngle(atan(dy/dx)+PI);
+        }
+        else {
+            setAngle(atan(dy/dx));
         }
     }
     if (getX()>=ofGetWindowWidth() || getX()<=0){
