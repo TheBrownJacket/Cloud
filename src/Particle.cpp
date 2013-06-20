@@ -16,10 +16,11 @@ Particle::Particle() : // Using initializer list
     acceleration(ofVec2f(0,0)), // For now, set to zero acceleration
 
     radius(ofRandom(MIN_RADIUS,MAX_RADIUS)), // Set to varible radius
-    opaque(255), // For now, set to full visibilty
+    color(speed/MAX_SPEED*255,position.x/ofGetWindowWidth()*255,position.y/ofGetWindowHeight()*255), // Set to formulaic color
 
     attract(false), // Set to no attraction
-    repel(false) // Set to no repulsion
+    repel(false), // Set to no repulsion
+    noise(true) // Set noise on to create "bug"-like movement
 {
 
 }
@@ -40,9 +41,6 @@ float Particle::getAngle(){
 float Particle::getRadius(){
     return radius;
 }
-float Particle::getOpaque(){
-    return opaque;
-}
 ofColor & Particle::getColor(){
     return color;
 }
@@ -54,6 +52,9 @@ bool Particle::getAttract(){
 }
 bool Particle::getRepel(){
     return repel;
+}
+bool Particle::getNoise(){
+    return noise;
 }
 
 // Setters
@@ -81,9 +82,6 @@ void Particle::setAngle(float a){
 void Particle::setRadius(float r){
     radius = ofClamp(r,MIN_RADIUS,MAX_RADIUS);
 }
-void Particle::setOpaque(float o){
-    opaque = ofClamp(o,0,255);
-}
 void Particle::setColor(int r, int g, int b){
     getColor().r = ofClamp(r,0,255);
     getColor().g = ofClamp(g,0,255);
@@ -95,10 +93,13 @@ void Particle::setAttract(bool a){
 void Particle::setRepel(bool r){
     repel = r;
 }
+void Particle::setNoise(bool n){
+    noise = n;
+}
 
 // Other methods
 void Particle::update(){
-    // position + motion + bounds
+    // attraction and repulsion
     if (attract){
         float dy = ((float)ofGetWindowHeight()-ofGetMouseY())-getY();
         float dx = ofGetMouseX()-getX();
@@ -119,12 +120,20 @@ void Particle::update(){
             setAngle(atan(dy/dx));
         }
     }
+    // noise
+    if (noise){
+        setAngle(getAngle()+ofRandomf()*ANGLE_NOISE);
+        setSpeed(getSpeed()+ofRandomf()*SPEED_NOISE);
+        setRadius(getRadius()+ofRandomf()*RADIUS_NOISE);
+    }
+    // bounds
     if (getX()>=ofGetWindowWidth() || getX()<=0){
         setAngle(-getAngle()+PI);
     }
     if (getY()>=ofGetWindowHeight() || getY()<=0){
         setAngle(-getAngle());
     }
+    // position + motion
     velocity += acceleration;
     position += velocity;
     // color
@@ -142,9 +151,9 @@ void Particle::draw(){
 }
 void Particle::printInfo(){
     if (ofGetFrameNum()%(int)ofGetFrameRate() == 0){
-        cout << '(' + ofToString(getX()) + ',' + ofToString(getY()) + ')' << endl;
+        cout << '(' << getX() << ',' << getY() << ')' << endl;
         cout << getSpeed() << "\t" << getAngle() << endl;
-        cout << endl;
+        cout << getRadius() << endl << endl;
     }
 }
 

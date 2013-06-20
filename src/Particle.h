@@ -8,28 +8,34 @@
 #define MIN_SPEED 0.0
 #define MAX_SPEED 10.0
 
-#define MIN_FLOW 0.0
-#define MAX_FLOW 2.0
+#define MIN_FLOW 0.0 // not used yet
+#define MAX_FLOW 2.0 // not used yet
 
-#define MAX_ALPHA PI/2
+#define MIN_ALPHA 0.0 // not used yet
+#define MAX_ALPHA PI/2 // not used yet
 
 #define MIN_RADIUS 1.0
 #define MAX_RADIUS 5.0
 
+#define ANGLE_NOISE PI/10
+#define SPEED_NOISE 0.05
+#define RADIUS_NOISE 0.25 // trying this out
+
 class Particle{
     public:
         Particle();
+
         // Getters
         float getX();
         float getY();
         float getSpeed();
         float getAngle();
         float getRadius();
-        float getOpaque();
         ofColor & getColor();
         ofxVectorGraphics & getGraphic();
         bool getAttract();
         bool getRepel();
+        bool getNoise();
 
         // Setters
         void setX(float x);
@@ -37,10 +43,10 @@ class Particle{
         void setSpeed(float s);
         void setAngle(float a);
         void setRadius(float r);
-        void setOpaque(float o);
         void setColor(int r, int g,  int b);
         void setAttract(bool a);
         void setRepel(bool r);
+        void setNoise(bool n);
 
         // Other methods
         void update();
@@ -63,12 +69,12 @@ class Particle{
         ofVec2f acceleration;
 
         float radius;
-        float opaque; // not used yet
         ofColor color;
         ofxVectorGraphics graphic;
 
         bool attract;
         bool repel;
+        bool noise;
 
     private:
 };

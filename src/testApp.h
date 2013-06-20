@@ -16,6 +16,12 @@ class testApp : public ofBaseApp{
 
         vector <Particle> particles;
 
+        string title;
+        string colors;
+        string keys;
+        string mouse;
+        string noise;
+
         void keyPressed  (int key);
         void keyReleased(int key);
         void mouseMoved(int x, int y );
