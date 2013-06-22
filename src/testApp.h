@@ -20,7 +20,7 @@ class testApp : public ofBaseApp{
         string colors;
         string keys;
         string mouse;
-        string noise;
+        string esc;
 
         void keyPressed  (int key);
         void keyReleased(int key);

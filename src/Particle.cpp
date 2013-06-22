@@ -1,26 +1,20 @@
 #include "Particle.h"
 
-// Reference objects
-const ofVec2f Particle::origin = ofVec2f(0,0);
-const ofVec2f Particle::xAxis = ofVec2f(1,0);
-const ofVec2f Particle::yAxis = ofVec2f(0,1);
-
 Particle::Particle() : // Using initializer list
     angle(ofRandomf()*PI), // Set to random angle from -PI to PI
     speed(ofRandom(MIN_SPEED,MAX_SPEED)), // Set to random speed within bounds
-    flow(ofRandomf()*MAX_FLOW), // Set to variable tanslational acceleration
-    alpha(ofRandomf()*MAX_ALPHA), // Set to variable rotational acceleration
+    alpha(ofRandom(MIN_ALPHA,MAX_ALPHA)), // Set to random rotational acceleration
+    flow(ofRandom(MIN_FLOW,MAX_FLOW)), // Set to random translational acceleration
 
     position(ofVec2f(ofRandom(0,ofGetWindowWidth()),ofRandom(0,ofGetWindowHeight()))), // Set to random position
     velocity(ofVec2f(cos(angle)*speed,sin(angle)*speed)), // Set to correct velocity
-    acceleration(ofVec2f(0,0)), // For now, set to zero acceleration
 
     radius(ofRandom(MIN_RADIUS,MAX_RADIUS)), // Set to varible radius
-    color(speed/MAX_SPEED*255,position.x/ofGetWindowWidth()*255,position.y/ofGetWindowHeight()*255), // Set to formulaic color
+    color(speed/MAX_SPEED*255,position.x/ofGetWindowWidth()*255,position.y/ofGetWindowHeight()*255), // Set color
 
     attract(false), // Set to no attraction
     repel(false), // Set to no repulsion
-    noise(true) // Set noise on to create "bug"-like movement
+    alive(true) // Set true to create bug-like movement
 {
 
 }
@@ -32,11 +26,17 @@ float Particle::getX(){
 float Particle::getY(){
     return position.y;
 }
+float Particle::getAngle(){
+    return angle;
+}
 float Particle::getSpeed(){
     return speed;
 }
-float Particle::getAngle(){
-    return angle;
+float Particle::getAlpha(){
+    return alpha;
+}
+float Particle::getFlow(){
+    return flow;
 }
 float Particle::getRadius(){
     return radius;
@@ -53,8 +53,8 @@ bool Particle::getAttract(){
 bool Particle::getRepel(){
     return repel;
 }
-bool Particle::getNoise(){
-    return noise;
+bool Particle::getAlive(){
+    return alive;
 }
 
 // Setters
@@ -64,20 +64,20 @@ void Particle::setX(float x){
 void Particle::setY(float y){
     position.y = ofClamp(y,0,ofGetWindowHeight());
 }
+void Particle::setAngle(float a){
+    angle = a;
+    setSpeed(getSpeed());
+}
 void Particle::setSpeed(float s){
     speed = ofClamp(s,MIN_SPEED,MAX_SPEED);
     velocity.x = cos(angle)*speed;
     velocity.y = sin(angle)*speed;
 }
-void Particle::setAngle(float a){
-    while (a>PI){
-        a -= 2*PI;
-    }
-    while (a<-PI){
-        a += 2*PI;
-    }
-    angle = a;
-    setSpeed(getSpeed());
+void Particle::setAlpha(float a){
+    alpha = ofClamp(a,MIN_ALPHA,MAX_ALPHA);
+}
+void Particle::setFlow(float f){
+    flow = ofClamp(f,MIN_FLOW,MAX_FLOW);
 }
 void Particle::setRadius(float r){
     radius = ofClamp(r,MIN_RADIUS,MAX_RADIUS);
@@ -93,37 +93,51 @@ void Particle::setAttract(bool a){
 void Particle::setRepel(bool r){
     repel = r;
 }
-void Particle::setNoise(bool n){
-    noise = n;
+void Particle::setAlive(bool a){
+    alive = a;
 }
 
 // Other methods
-void Particle::update(){
+void Particle::update(){ // main method that controls all necessary movement
     // attraction and repulsion
-    if (attract){
-        float dy = ((float)ofGetWindowHeight()-ofGetMouseY())-getY();
-        float dx = ofGetMouseX()-getX();
-        if (dx>=0){
-            setAngle(atan(dy/dx));
+    float dy = (ofGetWindowHeight()-ofGetMouseY())-getY();
+    float dx = ofGetMouseX()-getX();
+    if (getAttract()){
+        float desired = dx>=0 ? atan(dy/dx) : atan(dy/dx)+PI;
+        float angdiff = desired-getAngle();
+        if (angdiff >= 0){
+            setAngle(getAngle()+getAlpha());
         }
         else {
-            setAngle(atan(dy/dx)+PI);
+            setAngle(getAngle()-getAlpha());
         }
-    }
-    else if (repel){
-        float dy = ((float)ofGetWindowHeight()-ofGetMouseY())-getY();
-        float dx = ofGetMouseX()-getX();
-        if (dx>=0){
-            setAngle(atan(dy/dx)+PI);
+        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<getAngle()){
+            setSpeed(getSpeed()+getFlow());
         }
         else {
-            setAngle(atan(dy/dx));
+            setSpeed(getSpeed()-getFlow());
         }
     }
-    // noise
-    if (noise){
-        setAngle(getAngle()+ofRandomf()*ANGLE_NOISE);
-        setSpeed(getSpeed()+ofRandomf()*SPEED_NOISE);
+    if (getRepel() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
+        float desired = dx>=0 ? atan(dy/dx)+PI : atan(dy/dx);
+        float angdiff = desired-getAngle();
+        if (angdiff >= 0){
+            setAngle(getAngle()+getAlpha());
+        }
+        else {
+            setAngle(getAngle()-getAlpha());
+        }
+        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<getAngle()){
+            setSpeed(getSpeed()+getFlow());
+        }
+        else {
+            setSpeed(getSpeed()-getFlow());
+        }
+    }
+    // life
+    if (getAlive()){
+        setAngle(getAngle()+ofRandomf()*getAlpha());
+        setSpeed(getSpeed()+ofRandomf()*getFlow());
         setRadius(getRadius()+ofRandomf()*RADIUS_NOISE);
     }
     // bounds
@@ -134,7 +148,6 @@ void Particle::update(){
         setAngle(-getAngle());
     }
     // position + motion
-    velocity += acceleration;
     position += velocity;
     // color
     float r = (getSpeed()/MAX_SPEED)*255;
@@ -153,7 +166,7 @@ void Particle::printInfo(){
     if (ofGetFrameNum()%(int)ofGetFrameRate() == 0){
         cout << '(' << getX() << ',' << getY() << ')' << endl;
         cout << getSpeed() << "\t" << getAngle() << endl;
-        cout << getRadius() << endl << endl;
+        cout << getFlow() << "\t" << getAlpha() << endl << endl;
     }
 }
 

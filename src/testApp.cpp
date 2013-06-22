@@ -2,18 +2,17 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    debug = true;
+    debug = false;
 
     ofSetWindowTitle("CLOUD BETA");
-    //ofHideCursor();
-    ofBackground(255,255,255);
+    ofBackground(0,0,0);
     ofSetFrameRate(FRAMERATE);
 
-    title = "CLOUD BETA\n";
+    title = "Welcome to CLOUD BETA!\n";
     colors = "Position and speed of particles has influence on the color gradient.\n";
-    keys = "Use number keys 0-9 to reset upper bound of each particle's speed.\n";
-    mouse = "Left clicking causes attraction; right clicking causes repulsion.\n";
-    noise = "Hit 'n' to toggle noise - although it looks more life-like with it on. =D\n";
+    keys = "Use number keys 0-9 to reset each particle's speed.\n";
+    mouse = "Left clicking causes attraction.\nRight clicking causes repulsion.\nBoth together create a calm region.\n";
+    esc = "Hit 'Esc' to exit.\n";
 
     particles.assign(NUM_OF_PARTICLES,Particle());
     for (int i=0; i<particles.size(); i++){
@@ -33,68 +32,64 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofEnableAlphaBlending();
     for (int i=0; i<particles.size(); i++){
         particles[i].draw();
     }
-    ofDisableAlphaBlending();
-    ofSetColor(0,0,0);
-    ofDrawBitmapString(title+colors+keys+mouse+noise,5,15);
+    ofSetColor(255,255,255);
+    ofDrawBitmapString(title+colors,5,15);
+    ofDrawBitmapString(keys+mouse+esc,0,ofGetWindowHeight()-60);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     float speed;
     bool num = false;
+    float diff = MAX_SPEED-MIN_SPEED;
     switch (key){
         case '0':
-            speed = 0;
+            speed = MIN_SPEED;
             num = true;
             break;
         case '1':
-            speed = (1.0/9)*MAX_SPEED;
+            speed = (1.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '2':
-            speed = (2.0/9)*MAX_SPEED;
+            speed = (2.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '3':
-            speed = (3.0/9)*MAX_SPEED;
+            speed = (3.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '4':
-            speed = (4.0/9)*MAX_SPEED;
+            speed = (4.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '5':
-            speed = (5.0/9)*MAX_SPEED;
+            speed = (5.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '6':
-            speed = (6.0/9)*MAX_SPEED;
+            speed = (6.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '7':
-            speed = (7.0/9)*MAX_SPEED;
+            speed = (7.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '8':
-            speed = (8.0/9)*MAX_SPEED;
+            speed = (8.0/9)*diff+MIN_SPEED;
             num = true;
             break;
         case '9':
-            speed = (9.0/9)*MAX_SPEED;
+            speed = MAX_SPEED;
             num = true;
             break;
-        case 'n':
-            for (int i=0; i<particles.size(); i++){
-                particles[i].setNoise(!particles[i].getNoise());
-            }
     }
     if (num){
         for (int i=0; i<particles.size(); i++){
-            particles[i].setSpeed(ofRandom(MIN_SPEED,speed));
+            particles[i].setSpeed(speed);
         }
     }
 }
@@ -116,7 +111,6 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    //cout << button << endl;
     if (button == 0){
         for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(true);
