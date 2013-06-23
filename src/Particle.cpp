@@ -111,13 +111,13 @@ void Particle::update(){ // main method that controls all necessary movement
     if (getAttract()){
         float desired = atan2(dy,dx);
         float angdiff = desired-getAngle();
-        if ((angdiff>0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
+        if ((angdiff>=0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
             setAngle(getAngle()+getAlpha());
         }
-        else if ((angdiff>0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
+        else if ((angdiff>=0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
             setAngle(getAngle()-getAlpha());
         }
-        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
+        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<=getAngle()){
             setSpeed(getSpeed()+getFlow());
         }
         else {
@@ -125,7 +125,7 @@ void Particle::update(){ // main method that controls all necessary movement
         }
     }
     if (getRepel() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
-        float desired = atan2(dy,dx) >= 0 ? atan2(dy,dx)-PI : atan2(dy,dx)+PI;
+        float desired = atan2(dy,dx)>=0 ? atan2(dy,dx)-PI : atan2(dy,dx)+PI;
         float angdiff = desired-getAngle();
         if ((angdiff>0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
             setAngle(getAngle()+getAlpha());

@@ -6,20 +6,20 @@
 #include <cmath>
 
 #define MIN_SPEED 0.0
-#define MAX_SPEED 10.0
+#define MAX_SPEED 15.0
 
-#define MIN_ALPHA PI/18
-#define MAX_ALPHA PI/9
+#define MIN_ALPHA PI/180
+#define MAX_ALPHA PI/18
 
-#define MIN_FLOW 0.01
-#define MAX_FLOW 0.1
+#define MIN_FLOW 0.1
+#define MAX_FLOW 1.0
 
 #define MIN_RADIUS 1.0
 #define MAX_RADIUS 5.0
 
 #define RADIUS_NOISE 1.0
 
-#define BARRIER 500
+#define BARRIER 300
 
 class Particle{
     public:
