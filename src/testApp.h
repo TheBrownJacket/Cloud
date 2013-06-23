@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "Particle.h"
 
-#define NUM_OF_PARTICLES 250
+#define NUM_OF_PARTICLES 500
 #define FRAMERATE 60
 
 class testApp : public ofBaseApp{

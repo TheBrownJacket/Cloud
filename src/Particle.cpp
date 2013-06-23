@@ -65,6 +65,12 @@ void Particle::setY(float y){
     position.y = ofClamp(y,0,ofGetWindowHeight());
 }
 void Particle::setAngle(float a){
+    while (a>PI){
+        a-=2*PI;
+    }
+    while (a<-PI){
+        a+=2*PI;
+    }
     angle = a;
     setSpeed(getSpeed());
 }
@@ -103,15 +109,15 @@ void Particle::update(){ // main method that controls all necessary movement
     float dy = (ofGetWindowHeight()-ofGetMouseY())-getY();
     float dx = ofGetMouseX()-getX();
     if (getAttract()){
-        float desired = dx>=0 ? atan(dy/dx) : atan(dy/dx)+PI;
+        float desired = atan2(dy,dx);
         float angdiff = desired-getAngle();
-        if (angdiff >= 0){
+        if ((angdiff>0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
             setAngle(getAngle()+getAlpha());
         }
-        else {
+        else if ((angdiff>0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
             setAngle(getAngle()-getAlpha());
         }
-        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<getAngle()){
+        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
             setSpeed(getSpeed()+getFlow());
         }
         else {
@@ -119,15 +125,15 @@ void Particle::update(){ // main method that controls all necessary movement
         }
     }
     if (getRepel() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
-        float desired = dx>=0 ? atan(dy/dx)+PI : atan(dy/dx);
+        float desired = atan2(dy,dx) >= 0 ? atan2(dy,dx)-PI : atan2(dy,dx)+PI;
         float angdiff = desired-getAngle();
-        if (angdiff >= 0){
+        if ((angdiff>0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
             setAngle(getAngle()+getAlpha());
         }
-        else {
+        else if ((angdiff>0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
             setAngle(getAngle()-getAlpha());
         }
-        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<getAngle()){
+        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
             setSpeed(getSpeed()+getFlow());
         }
         else {
