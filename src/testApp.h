@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "Particle.h"
 
-#define NUM_OF_PARTICLES 500
+#define NUM_OF_PARTICLES 250
 #define FRAMERATE 60
 
 class testApp : public ofBaseApp{
@@ -21,6 +21,9 @@ class testApp : public ofBaseApp{
         string keys;
         string mouse;
         string esc;
+        string help;
+
+        bool h;
 
         void keyPressed  (int key);
         void keyReleased(int key);

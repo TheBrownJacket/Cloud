@@ -6,11 +6,11 @@ Particle::Particle() : // Using initializer list
     alpha(ofRandom(MIN_ALPHA,MAX_ALPHA)), // Set to random rotational acceleration
     flow(ofRandom(MIN_FLOW,MAX_FLOW)), // Set to random translational acceleration
 
-    position(ofVec2f(ofRandom(0,ofGetWindowWidth()),ofRandom(0,ofGetWindowHeight()))), // Set to random position
-    velocity(ofVec2f(cos(angle)*speed,sin(angle)*speed)), // Set to correct velocity
-
     radius(ofRandom(MIN_RADIUS,MAX_RADIUS)), // Set to varible radius
     color(speed/MAX_SPEED*255,position.x/ofGetWindowWidth()*255,position.y/ofGetWindowHeight()*255), // Set color
+
+    position(ofVec2f(ofRandom(radius,ofGetWindowWidth()-radius),ofRandom(radius,ofGetWindowHeight()-radius))), // Set to random position
+    velocity(ofVec2f(cos(angle)*speed,sin(angle)*speed)), // Set to correct velocity
 
     attract(false), // Set to no attraction
     repel(false), // Set to no repulsion
@@ -59,10 +59,10 @@ bool Particle::getAlive(){
 
 // Setters
 void Particle::setX(float x){
-    position.x = ofClamp(x,0,ofGetWindowWidth());
+    position.x = ofClamp(x,getRadius(),ofGetWindowWidth()-getRadius());
 }
 void Particle::setY(float y){
-    position.y = ofClamp(y,0,ofGetWindowHeight());
+    position.y = ofClamp(y,getRadius(),ofGetWindowHeight()-getRadius());
 }
 void Particle::setAngle(float a){
     while (a>PI){
@@ -108,36 +108,41 @@ void Particle::update(){ // main method that controls all necessary movement
     // attraction and repulsion
     float dy = (ofGetWindowHeight()-ofGetMouseY())-getY();
     float dx = ofGetMouseX()-getX();
-    if (getAttract()){
+    if (getAttract() && !getRepel()){
         float desired = atan2(dy,dx);
         float angdiff = desired-getAngle();
-        if ((angdiff>=0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
+        if ((angdiff>0 && abs(angdiff)<=PI) || (angdiff<0 && abs(angdiff)>PI)){
             setAngle(getAngle()+getAlpha());
         }
-        else if ((angdiff>=0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
+        else if ((angdiff>0 && abs(angdiff)>PI) || (angdiff<0 && abs(angdiff)<=PI)){
             setAngle(getAngle()-getAlpha());
         }
-        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<=getAngle()){
-            setSpeed(getSpeed()+getFlow());
-        }
-        else {
-            setSpeed(getSpeed()-getFlow());
-        }
+//        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<=getAngle()){
+//            setSpeed(getSpeed()+getFlow());
+//        }
+//        else {
+//            setSpeed(getSpeed()-getFlow());
+//        }
     }
-    if (getRepel() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
-        float desired = atan2(dy,dx)>=0 ? atan2(dy,dx)-PI : atan2(dy,dx)+PI;
+    else if (getRepel() && !getAttract() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
+        float desired = atan2(dy,dx)>0 ? atan2(dy,dx)-PI : atan2(dy,dx)+PI;
         float angdiff = desired-getAngle();
-        if ((angdiff>0 && angdiff<=PI) || (angdiff<0 && angdiff>PI)){
+        if ((angdiff>0 && abs(angdiff)<=PI) || (angdiff<0 && abs(angdiff)>PI)){
             setAngle(getAngle()+getAlpha());
         }
-        else if ((angdiff>0 && angdiff>=PI) || (angdiff<0 && angdiff<PI)){
+        else if ((angdiff>0 && abs(angdiff)>PI) || (angdiff<0 && abs(angdiff)<=PI)){
             setAngle(getAngle()-getAlpha());
         }
-        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
-            setSpeed(getSpeed()+getFlow());
-        }
-        else {
-            setSpeed(getSpeed()-getFlow());
+//        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
+//            setSpeed(getSpeed()+getFlow());
+//        }
+//        else {
+//            setSpeed(getSpeed()-getFlow());
+//        }
+    }
+    else if (getAttract() && getRepel()){
+        if (getSpeed()>0){
+         setSpeed(getSpeed()-getFlow());
         }
     }
     // life
@@ -147,12 +152,12 @@ void Particle::update(){ // main method that controls all necessary movement
         setRadius(getRadius()+ofRandomf()*RADIUS_NOISE);
     }
     // bounds
-    if (getX()>=ofGetWindowWidth() || getX()<=0){
-        setAngle(-getAngle()+PI);
-    }
-    if (getY()>=ofGetWindowHeight() || getY()<=0){
-        setAngle(-getAngle());
-    }
+//    if (getX()>=ofGetWindowWidth()-getRadius() || getX()<=getRadius()){
+//        setAngle(-getAngle()+PI);
+//    }
+//    if (getY()>=ofGetWindowHeight()-getRadius() || getY()<=getRadius()){
+//        setAngle(-getAngle());
+//    }
     // position + motion
     position += velocity;
     // color

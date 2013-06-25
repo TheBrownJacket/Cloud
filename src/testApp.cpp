@@ -7,12 +7,14 @@ void testApp::setup(){
     ofSetWindowTitle("CLOUD BETA");
     ofBackground(0,0,0);
     ofSetFrameRate(FRAMERATE);
+    h = false;
 
     title = "Welcome to CLOUD BETA!\n";
     colors = "Position and speed of particles has influence on the color gradient.\n";
     keys = "Use number keys 0-9 to reset each particle's speed.\n";
-    mouse = "Left clicking causes attraction.\nRight clicking causes repulsion.\nBoth together create a calm region.\n";
-    esc = "Hit 'Esc' to exit.\n";
+    mouse = "Holding left click causes attraction.\nRight click causes repulsion.\nBoth together casts a calm spell.\n";
+    esc = "Hit 'r' to reset. Hit 'Esc' to exit.\n";
+    help = "Hit 'h' to bring up info on controls.\n";
 
     particles.assign(NUM_OF_PARTICLES,Particle());
     for (int i=0; i<particles.size(); i++){
@@ -36,8 +38,13 @@ void testApp::draw(){
         particles[i].draw();
     }
     ofSetColor(255,255,255);
-    ofDrawBitmapString(title+colors,5,15);
-    ofDrawBitmapString(keys+mouse+esc,0,ofGetWindowHeight()-60);
+        ofDrawBitmapString(title,5,15);
+    if (h){
+        ofDrawBitmapString(colors+keys+mouse+esc,5,ofGetWindowHeight()-75);
+    }
+    else {
+        ofDrawBitmapString(help,5,ofGetWindowHeight()-5);
+    }
 }
 
 //--------------------------------------------------------------
@@ -86,6 +93,13 @@ void testApp::keyPressed(int key){
             speed = MAX_SPEED;
             num = true;
             break;
+        case 'r':
+            for (int i=0; i<particles.size(); i++){
+                particles[i].reset();
+            }
+            break;
+        case 'h':
+            h = !h;
     }
     if (num){
         for (int i=0; i<particles.size(); i++){
@@ -111,12 +125,12 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    if (button == 0){
+    if (button == 0 || button == 1){
         for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(true);
         }
     }
-    else if (button == 2){
+    else if (button == 2 || button == 1){
         for (int i=0; i<particles.size(); i++){
             particles[i].setRepel(true);
         }
@@ -125,12 +139,12 @@ void testApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    if (button == 0){
+    if (button == 0 || button == 1){
         for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(false);
         }
     }
-    else if (button == 2){
+    else if (button == 2 || button == 1){
         for (int i=0; i<particles.size(); i++){
             particles[i].setRepel(false);
         }

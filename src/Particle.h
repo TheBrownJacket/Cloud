@@ -19,7 +19,7 @@
 
 #define RADIUS_NOISE 1.0
 
-#define BARRIER 300
+#define BARRIER 500
 
 class Particle{
     public:
@@ -64,11 +64,11 @@ class Particle{
         float alpha; // rotational acceleration
         float flow; // translational acceleration
 
-        ofVec2f position;
-        ofVec2f velocity;
-
         float radius;
         ofColor color;
+
+        ofVec2f position;
+        ofVec2f velocity;
         ofxVectorGraphics graphic;
 
         bool attract;
