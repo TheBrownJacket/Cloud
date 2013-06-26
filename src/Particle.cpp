@@ -152,12 +152,12 @@ void Particle::update(){ // main method that controls all necessary movement
         setRadius(getRadius()+ofRandomf()*RADIUS_NOISE);
     }
     // bounds
-//    if (getX()>=ofGetWindowWidth()-getRadius() || getX()<=getRadius()){
-//        setAngle(-getAngle()+PI);
-//    }
-//    if (getY()>=ofGetWindowHeight()-getRadius() || getY()<=getRadius()){
-//        setAngle(-getAngle());
-//    }
+    if (getX()>ofGetWindowWidth()-getRadius() || getX()<getRadius()){
+        setAngle(-getAngle()+PI);
+    }
+    if (getY()>ofGetWindowHeight()-getRadius() || getY()<getRadius()){
+        setAngle(-getAngle());
+    }
     // position + motion
     position += velocity;
     // color

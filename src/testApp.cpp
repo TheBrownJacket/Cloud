@@ -5,6 +5,7 @@ void testApp::setup(){
     debug = false;
 
     ofSetWindowTitle("CLOUD BETA");
+    ofHideCursor();
     ofBackground(0,0,0);
     ofSetFrameRate(FRAMERATE);
     h = false;
@@ -28,6 +29,7 @@ void testApp::update(){
         particles[i].update();
     }
     if (debug){
+        cout << ofGetFrameRate() << endl;
         particles[0].printInfo();
     }
 }
@@ -36,9 +38,12 @@ void testApp::update(){
 void testApp::draw(){
     for (int i=0; i<particles.size(); i++){
         particles[i].draw();
+        if(debug){
+            ofDrawBitmapString(ofToString(i),particles[i].getX(),ofGetWindowHeight()-particles[i].getY());
+        }
     }
     ofSetColor(255,255,255);
-        ofDrawBitmapString(title,5,15);
+    ofDrawBitmapString(title,5,15);
     if (h){
         ofDrawBitmapString(colors+keys+mouse+esc,5,ofGetWindowHeight()-75);
     }
