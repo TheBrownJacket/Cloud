@@ -20,6 +20,7 @@
 #define RADIUS_NOISE 1.0
 
 #define BARRIER 500
+#define ORBITAL_FACTOR 1 // testing this out
 
 class Particle{
     public:

@@ -117,11 +117,13 @@ void Particle::update(){ // main method that controls all necessary movement
         else if ((angdiff>0 && abs(angdiff)>PI) || (angdiff<0 && abs(angdiff)<=PI)){
             setAngle(getAngle()-getAlpha());
         }
-//        if (desired+getAlpha()>=getAngle() && desired-getAlpha()<=getAngle()){
+//        if (desired+getAlpha()>getAngle() && desired-getAlpha()<getAngle()){
 //            setSpeed(getSpeed()+getFlow());
 //        }
 //        else {
-//            setSpeed(getSpeed()-getFlow());
+//            if (getSpeed()>ORBITAL_FACTOR*getFlow()){
+//                setSpeed(getSpeed()-getFlow());
+//            }
 //        }
     }
     else if (getRepel() && !getAttract() && sqrt(pow(dy,2)+pow(dx,2))<=BARRIER){
@@ -137,12 +139,14 @@ void Particle::update(){ // main method that controls all necessary movement
 //            setSpeed(getSpeed()+getFlow());
 //        }
 //        else {
-//            setSpeed(getSpeed()-getFlow());
+//            if (getSpeed()>ORBITAL_FACTOR*getFlow()){
+//                setSpeed(getSpeed()-getFlow());
+//            }
 //        }
     }
     else if (getAttract() && getRepel()){
         if (getSpeed()>0){
-         setSpeed(getSpeed()-getFlow());
+            setSpeed(getSpeed()-getFlow());
         }
     }
     // life

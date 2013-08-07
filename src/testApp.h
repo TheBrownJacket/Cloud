@@ -5,6 +5,7 @@
 
 #define NUM_OF_PARTICLES 250
 #define FRAMERATE 60
+#define DELTA 3
 
 class testApp : public ofBaseApp{
     public:
@@ -24,6 +25,12 @@ class testApp : public ofBaseApp{
         string help;
 
         bool h;
+
+        bool left;
+        bool right;
+        float r;
+        float g;
+        float b;
 
         void keyPressed  (int key);
         void keyReleased(int key);

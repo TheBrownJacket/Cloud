@@ -4,9 +4,15 @@
 void testApp::setup(){
     debug = false;
 
+    left = false;
+    right = false;
+    r = 255;
+    g = 255;
+    b = 255;
+
     ofSetWindowTitle("CLOUD BETA");
     ofHideCursor();
-    ofBackground(0,0,0);
+    ofBackground(r,g,b);
     ofSetFrameRate(FRAMERATE);
     h = false;
 
@@ -25,8 +31,19 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+
     for (int i=0; i<particles.size(); i++){
         particles[i].update();
+    }
+    if (left && right & r > DELTA){
+        r -= DELTA;
+        g -= DELTA;
+        b -= DELTA;
+    }
+    else if (r < 255-DELTA){
+        r += DELTA;
+        g += DELTA;
+        b += DELTA;
     }
     if (debug){
         cout << ofGetFrameRate() << endl;
@@ -36,13 +53,14 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    ofBackground(r,g,b);
     for (int i=0; i<particles.size(); i++){
         particles[i].draw();
         if(debug){
-            ofDrawBitmapString(ofToString(i),particles[i].getX(),ofGetWindowHeight()-particles[i].getY());
+            ofDrawBitmapString(ofToString(i+1),particles[i].getX(),ofGetWindowHeight()-particles[i].getY());
         }
     }
-    ofSetColor(255,255,255);
+    ofSetColor(255-r,255-g,255-b);
     ofDrawBitmapString(title,5,15);
     if (h){
         ofDrawBitmapString(colors+keys+mouse+esc,5,ofGetWindowHeight()-75);
@@ -130,29 +148,33 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    if (button == 0 || button == 1){
+    if (button == 0){
         for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(true);
         }
+        left = true;
     }
-    else if (button == 2 || button == 1){
+    else if (button == 2){
         for (int i=0; i<particles.size(); i++){
             particles[i].setRepel(true);
         }
+        right =true;
     }
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-    if (button == 0 || button == 1){
+    if (button == 0){
         for (int i=0; i<particles.size(); i++){
             particles[i].setAttract(false);
         }
+        left = false;
     }
-    else if (button == 2 || button == 1){
+    else if (button == 2){
         for (int i=0; i<particles.size(); i++){
             particles[i].setRepel(false);
         }
+        right = false;
     }
 }
 
