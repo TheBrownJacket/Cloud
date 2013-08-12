@@ -5,7 +5,7 @@
 
 #define NUM_OF_PARTICLES 250
 #define FRAMERATE 60
-#define DELTA 3
+#define DELTA 6
 
 class testApp : public ofBaseApp{
     public:

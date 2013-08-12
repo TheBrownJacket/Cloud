@@ -165,9 +165,9 @@ void Particle::update(){ // main method that controls all necessary movement
     // position + motion
     position += velocity;
     // color
-    float r = (getSpeed()/MAX_SPEED)*255;
-    float g = (getY()/ofGetWindowHeight())*255;
-    float b = (1-getY()/ofGetWindowHeight())*255;
+    float r = getAttract() && getRepel() ? getColor().r+1 : (getSpeed()/MAX_SPEED)*255;
+    float g = getAttract() ? getColor().g+1 : (getY()/ofGetWindowHeight())*255;
+    float b = getRepel() ? getColor().b+1 : (1-getY()/ofGetWindowHeight())*255;
     setColor(r,g,b);
 }
 void Particle::reset(){
@@ -179,9 +179,9 @@ void Particle::draw(){
 }
 void Particle::printInfo(){
     if (ofGetFrameNum()%(int)ofGetFrameRate() == 0){
-        cout << '(' << getX() << ',' << getY() << ')' << endl;
-        cout << getSpeed() << "\t" << getAngle() << endl;
-        cout << getFlow() << "\t" << getAlpha() << endl << endl;
+        cout << "Position: " << '(' << getX() << ',' << getY() << ')' << endl;
+        cout << "Speed: " << getSpeed() << "\t" << "Angle:"  << getAngle() << endl;
+        cout << "Flow: " << getFlow() << "\t" << "Alpha: " << getAlpha() << endl << endl;
     }
 }
 

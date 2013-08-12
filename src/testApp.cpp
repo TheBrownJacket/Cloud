@@ -17,7 +17,7 @@ void testApp::setup(){
     h = false;
 
     title = "Welcome to CLOUD BETA!\n";
-    colors = "Position and speed of particles has influence on the color gradient.\n";
+    colors = "Speed and behavior of particles has influence on the color gradient.\n";
     keys = "Use number keys 0-9 to reset each particle's speed.\n";
     mouse = "Holding left click causes attraction.\nRight click causes repulsion.\nBoth together casts a calm spell.\n";
     esc = "Hit 'r' to reset. Hit 'Esc' to exit.\n";
@@ -46,7 +46,7 @@ void testApp::update(){
         b += DELTA;
     }
     if (debug){
-        cout << ofGetFrameRate() << endl;
+        //cout << ofGetFrameRate() << endl;
         particles[0].printInfo();
     }
 }
