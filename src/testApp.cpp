@@ -158,7 +158,7 @@ void testApp::mousePressed(int x, int y, int button){
         for (int i=0; i<particles.size(); i++){
             particles[i].setRepel(true);
         }
-        right =true;
+        right = true;
     }
 }
 
