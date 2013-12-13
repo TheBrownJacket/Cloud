@@ -184,5 +184,3 @@ void Particle::printInfo(){
         cout << "Flow: " << getFlow() << "\t" << "Alpha: " << getAlpha() << endl << endl;
     }
 }
-
-
